@@ -15,7 +15,11 @@ import kotlinx.coroutines.launch
 class LevelsFragment : Fragment() {
     private val viewModel: SharedViewModel by activityViewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_levels, container, false)
         val recyclerView: RecyclerView = view.findViewById(R.id.levelsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -27,15 +31,15 @@ class LevelsFragment : Fragment() {
         )
 
         val adapter = LevelsAdapter(levels) { level ->
-            viewModel.selectLevel(level) // Обновляем ViewModel при выборе уровня
+            viewModel.selectLevel(level, requireContext()) // Передаём context для сохранения в SharedPreferences
         }
         recyclerView.adapter = adapter
 
         // Наблюдение за выбранным уровнем для UI-обновления
         lifecycleScope.launch {
             viewModel.selectedLevel.collectLatest { selected ->
-                // Обновляем UI, если нужно (например, подсветка выбранного уровня)
-                adapter.notifyDataSetChanged() // Обновляем адаптер, чтобы отобразить выбранный уровень
+                adapter.selectedLevel = selected
+                adapter.notifyDataSetChanged() // Обновляем UI
             }
         }
 

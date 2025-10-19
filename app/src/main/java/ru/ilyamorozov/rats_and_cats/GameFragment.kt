@@ -8,10 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import android.view.WindowManager
 
 class GameFragment : Fragment() {
     private lateinit var gameView: GameView
+    private val viewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,6 +39,9 @@ class GameFragment : Fragment() {
             findViewById<View>(R.id.settingsButton)?.visibility = View.GONE
             findViewById<View>(R.id.leaderboardButton)?.visibility = View.GONE
         }
+        // Выводим в консоль выбранный уровень
+        val selectedLevel = viewModel.selectedLevel.value
+        println("Starting game with level: $selectedLevel")
         // Запускаем сервис
         val intent = Intent(context, GameService::class.java).apply {
             putExtra("score", 0)

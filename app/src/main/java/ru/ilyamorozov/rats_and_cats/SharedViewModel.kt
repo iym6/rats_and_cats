@@ -11,7 +11,7 @@ class SharedViewModel : ViewModel() {
 
     fun selectLevel(level: Level, context: Context? = null) {
         _selectedLevel.value = level
-        // Сохраняем в SharedPreferences (опционально)
+        // Сохраняем в SharedPreferences
         context?.let {
             val prefs = it.getSharedPreferences("game_prefs", Context.MODE_PRIVATE)
             with(prefs.edit()) {

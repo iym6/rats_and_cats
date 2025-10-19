@@ -12,10 +12,14 @@ import android.media.SoundPool
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Random
 import kotlin.math.cos
@@ -35,9 +39,22 @@ class GameView(context: Context) : View(context) {
     private var mediaPlayer: MediaPlayer? = null
     private var soundPool: SoundPool? = null
     private var eatCheeseSoundId: Int = 0
-    private val prefs = context.getSharedPreferences("game_settings", Context.MODE_PRIVATE)
+    private val prefs = context.getSharedPreferences("game_prefs", Context.MODE_PRIVATE)
+    private val viewModel: SharedViewModel by lazy {
+        ViewModelProvider(context as FragmentActivity).get(SharedViewModel::class.java)
+    }
 
     init {
+        if (context is FragmentActivity) {
+            viewModel.loadSavedLevel(context)
+            // Наблюдение за изменением уровня
+            context.lifecycleScope.launch {
+                viewModel.selectedLevel.collectLatest { level ->
+                    println("Level changed: $level")
+                    resetGame() // Перезапускаем игру при смене уровня
+                }
+            }
+        }
         resetGame()
         initAudio()
     }
@@ -68,7 +85,7 @@ class GameView(context: Context) : View(context) {
     }
 
     private fun isMusicEnabled(): Boolean {
-        return prefs.getBoolean("music_enabled", true)
+        return prefs.getBoolean("music_enabled", false)
     }
 
     override fun isSoundEffectsEnabled(): Boolean {
@@ -85,8 +102,17 @@ class GameView(context: Context) : View(context) {
         mouse.x = width / 2f
         mouse.y = height / 2f
 
+        // Получаем уровень из ViewModel
+        val level = viewModel.selectedLevel.value
+        val (chasingCatSpeed, strayCatSpeed) = when (level?.difficulty) {
+            "Легкий" -> Pair(2, 3)
+            "Средний" -> Pair(3, 4)
+            "Сложный" -> Pair(15, 25)
+            else -> Pair(3, 4) // По умолчанию Средний
+        }
+        println("Chasing cat speed: $chasingCatSpeed, Stray cat speed: $strayCatSpeed")
         // Инициализация основной кошки
-        chasingCat = Cat(speed = 3, isChasing = true).apply {
+        chasingCat = Cat(speed = chasingCatSpeed, isChasing = true).apply {
             val corner = random.nextInt(4)
             when (corner) {
                 0 -> { x = 50f; y = 50f }
@@ -98,10 +124,7 @@ class GameView(context: Context) : View(context) {
 
         // Спавн сыра в начале игры
         spawnCheese()
-
-        // Запускаем сервис с начальным счётом
         updateScoreNotification()
-
         startGameLoop()
     }
 
@@ -157,7 +180,14 @@ class GameView(context: Context) : View(context) {
     private fun spawnStrayCat() {
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastStrayCatSpawnTime > random.nextInt(4000) + 3000 && strayCats.size < 3) {
-            val cat = Cat(speed = 4, isChasing = false)
+            val level = viewModel.selectedLevel.value
+            val strayCatSpeed = when (level?.difficulty) {
+                "Легкий" -> 3
+                "Средний" -> 4
+                "Сложный" -> 5
+                else -> 4 // По умолчанию Средний
+            }
+            val cat = Cat(speed = strayCatSpeed, isChasing = false)
             cat.x = if (random.nextBoolean()) 0f else width.toFloat()
             cat.y = random.nextFloat() * height
             cat.angle = random.nextFloat() * 2 * Math.PI.toFloat()
