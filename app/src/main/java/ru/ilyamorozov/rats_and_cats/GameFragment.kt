@@ -2,60 +2,61 @@ package ru.ilyamorozov.rats_and_cats
 
 import android.content.Context
 import android.content.Intent
-import android.media.MediaPlayer
-import android.media.SoundPool
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import android.view.WindowManager
 
 class GameFragment : Fragment() {
-
     private lateinit var gameView: GameView
-    private val sharedViewModel: SharedViewModel by activityViewModels()
-    // private var mediaPlayer: MediaPlayer? = null
-    // private var soundPool: SoundPool? = null
-    // private var eatSoundId: Int = 0
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         gameView = GameView(requireContext())
         return gameView
     }
 
     override fun onResume() {
         super.onResume()
-        /*
-        val prefs = requireActivity().getSharedPreferences("game_prefs", Context.MODE_PRIVATE)
-        if (prefs.getBoolean("music_enabled", false)) {
-            mediaPlayer = MediaPlayer.create(context, R.raw.background_music)
-            mediaPlayer?.isLooping = true
-            mediaPlayer?.start()
+        // Включаем полноэкранный режим
+        requireActivity().window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
+        // Скрываем меню
+        with(requireActivity()) {
+            findViewById<View>(R.id.titleTextView)?.visibility = View.GONE
+            findViewById<View>(R.id.startButton)?.visibility = View.GONE
+            findViewById<View>(R.id.levelsButton)?.visibility = View.GONE
+            findViewById<View>(R.id.settingsButton)?.visibility = View.GONE
+            findViewById<View>(R.id.leaderboardButton)?.visibility = View.GONE
         }
-
-        soundPool = SoundPool.Builder().build()
-        eatSoundId = soundPool?.load(context, R.raw.eat_sound, 1) ?: 0
-        */
-
-        // Start service
-        val intent = Intent(context, GameService::class.java)
-        requireContext().startForegroundService(intent)
+        // Запускаем сервис
+        val intent = Intent(context, GameService::class.java).apply {
+            putExtra("score", 0)
+        }
+        ContextCompat.startForegroundService(requireContext(), intent)
+        gameView.resume()
     }
 
     override fun onPause() {
         super.onPause()
-        /*
-        mediaPlayer?.stop()
-        mediaPlayer?.release()
-        soundPool?.release()
-        */
-        gameView.pause()
-
-        // Stop service
+        // Выключаем полноэкранный режим
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        // Останавливаем сервис
         val intent = Intent(context, GameService::class.java)
         requireContext().stopService(intent)
+        gameView.pause()
     }
 
-    // Вызов soundPool?.play(eatSoundId, 1f, 1f, 1, 0, 1f) при поедании сыра (добавить в updateGame)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        gameView.cleanup()
+    }
 }
