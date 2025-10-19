@@ -1,0 +1,44 @@
+package ru.ilyamorozov.rats_and_cats
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+
+class LevelsFragment : Fragment() {
+    private val viewModel: SharedViewModel by activityViewModels()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_levels, container, false)
+        val recyclerView: RecyclerView = view.findViewById(R.id.levelsRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+
+        val levels = listOf(
+            Level(1, "Уровень 1", "Легкий"),
+            Level(2, "Уровень 2", "Средний"),
+            Level(3, "Уровень 3", "Сложный")
+        )
+
+        val adapter = LevelsAdapter(levels) { level ->
+            viewModel.selectLevel(level) // Обновляем ViewModel при выборе уровня
+        }
+        recyclerView.adapter = adapter
+
+        // Наблюдение за выбранным уровнем для UI-обновления
+        lifecycleScope.launch {
+            viewModel.selectedLevel.collectLatest { selected ->
+                // Обновляем UI, если нужно (например, подсветка выбранного уровня)
+                adapter.notifyDataSetChanged() // Обновляем адаптер, чтобы отобразить выбранный уровень
+            }
+        }
+
+        return view
+    }
+}

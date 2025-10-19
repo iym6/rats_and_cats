@@ -1,0 +1,8 @@
+package ru.ilyamorozov.rats_and_cats
+
+data class Post(
+    val id: Int,
+    val userId: Int,
+    val title: String,
+    val body: String
+)
