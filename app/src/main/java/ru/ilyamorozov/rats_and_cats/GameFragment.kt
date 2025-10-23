@@ -3,6 +3,7 @@ package ru.ilyamorozov.rats_and_cats
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import android.view.WindowManager
 
+@Suppress("DEPRECATION")
 class GameFragment : Fragment() {
     private lateinit var gameView: GameView
     private val viewModel: SharedViewModel by activityViewModels()
@@ -31,17 +33,9 @@ class GameFragment : Fragment() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
-        // Скрываем меню
-        with(requireActivity()) {
-            findViewById<View>(R.id.titleTextView)?.visibility = View.GONE
-            findViewById<View>(R.id.startButton)?.visibility = View.GONE
-            findViewById<View>(R.id.levelsButton)?.visibility = View.GONE
-            findViewById<View>(R.id.settingsButton)?.visibility = View.GONE
-            findViewById<View>(R.id.leaderboardButton)?.visibility = View.GONE
-        }
-        // Выводим в консоль выбранный уровень
+        // Выводим в консоль выбранный уровень с тегом
         val selectedLevel = viewModel.selectedLevel.value
-        println("Starting game with level: $selectedLevel")
+        Log.i("RatsAndCats", "Starting game with level: $selectedLevel")
         // Запускаем сервис
         val intent = Intent(context, GameService::class.java).apply {
             putExtra("score", 0)

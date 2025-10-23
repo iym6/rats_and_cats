@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -9,7 +10,7 @@
         android:id="@+id/selectedLevelText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Уровень не выбран"
+        android:text="@string/no_level"
         android:textSize="16sp"
         android:layout_marginBottom="16dp" />
 
@@ -17,21 +18,30 @@
         android:id="@+id/musicSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Фоновая музыка"
-        android:layout_marginBottom="16dp" />
+        android:text="@string/background_music"
+        android:layout_marginBottom="16dp"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <Switch
         android:id="@+id/soundEffectsSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Звуковые эффекты"
-        android:layout_marginBottom="16dp" />
+        android:text="@string/sound_effects"
+        android:layout_marginBottom="16dp"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <EditText
         android:id="@+id/playerNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Имя игрока"
-        android:text="Игрок" />
-
+        android:hint="@string/player_name"
+        android:text="@string/player" />
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:text="@string/back"
+        android:theme="@style/BackButton" />
 </LinearLayout>

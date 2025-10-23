@@ -1,6 +1,7 @@
 package ru.ilyamorozov.rats_and_cats
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +47,10 @@ class LeaderboardFragment : Fragment() {
             viewModel.loadTop5()
         }
 
+        view.findViewById<Button>(R.id.backButton)?.setOnClickListener {
+            Log.i("RatsAndCats", "Back button clicked in LeaderboardFragment")
+            (requireActivity() as? MainActivity)?.showMainMenu()
+        }
         return view
     }
 }

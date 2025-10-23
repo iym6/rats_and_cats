@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Кошки-мышки</string>
+    <string name="back">Назад</string>
+    <string name="no_level">Уровень не выбран</string>
+    <string name="background_music">Фоновая музыка</string>
+    <string name="sound_effects">Звуковые эффекты</string>
+    <string name="player_name">Имя игрока</string>
+    <string name="player">Игрок</string>
+    <string name="pull_top5">Загрузить топ-5 мировых</string>
+    <string name="top5">Мировые рекорды (топ-5)</string>
 </resources>

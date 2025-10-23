@@ -1,9 +1,11 @@
 package ru.ilyamorozov.rats_and_cats
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -31,7 +33,7 @@ class LevelsFragment : Fragment() {
         )
 
         val adapter = LevelsAdapter(levels) { level ->
-            viewModel.selectLevel(level, requireContext()) // Передаём context для сохранения в SharedPreferences
+            viewModel.selectLevel(level, requireContext())
         }
         recyclerView.adapter = adapter
 
@@ -39,8 +41,14 @@ class LevelsFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.selectedLevel.collectLatest { selected ->
                 adapter.selectedLevel = selected
-                adapter.notifyDataSetChanged() // Обновляем UI
+                adapter.notifyDataSetChanged()
             }
+        }
+
+        // Обработка нажатия кнопки "Назад"
+        view.findViewById<Button>(R.id.backButton)?.setOnClickListener {
+            Log.i("RatsAndCats", "Back button clicked in LevelsFragment")
+            (requireActivity() as? MainActivity)?.showMainMenu()
         }
 
         return view

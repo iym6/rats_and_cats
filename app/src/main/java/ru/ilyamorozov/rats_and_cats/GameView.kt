@@ -1,6 +1,7 @@
 package ru.ilyamorozov.rats_and_cats
 
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
@@ -9,6 +10,7 @@ import android.graphics.Paint
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.SoundPool
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -22,6 +24,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Random
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -43,6 +46,10 @@ class GameView(context: Context) : View(context) {
     private val viewModel: SharedViewModel by lazy {
         ViewModelProvider(context as FragmentActivity).get(SharedViewModel::class.java)
     }
+
+    // Переменные для хранения скоростей кошек
+    private var chasingCatSpeed = 8
+    private  var strayCatSpeed = 4
 
     init {
         if (context is FragmentActivity) {
@@ -102,15 +109,20 @@ class GameView(context: Context) : View(context) {
         mouse.x = width / 2f
         mouse.y = height / 2f
 
-        // Получаем уровень из ViewModel
+        // Получаем уровень из ViewModel и вычисляем скорости ОДИН РАЗ
         val level = viewModel.selectedLevel.value
-        val (chasingCatSpeed, strayCatSpeed) = when (level?.difficulty) {
-            "Легкий" -> Pair(2, 3)
-            "Средний" -> Pair(3, 4)
-            "Сложный" -> Pair(15, 25)
-            else -> Pair(3, 4) // По умолчанию Средний
+        val speeds = when (level?.difficulty) {
+            "Легкий" -> Pair(5, 8)    // Согласованные значения
+            "Средний" -> Pair(8, 15)   // Согласованные значения
+            "Сложный" -> Pair(15, 25)  // Согласованные значения
+            else -> Pair(8, 15) // По умолчанию Средний
         }
-        println("Chasing cat speed: $chasingCatSpeed, Stray cat speed: $strayCatSpeed")
+
+        // Сохраняем скорости в переменные класса
+        chasingCatSpeed = speeds.first
+        strayCatSpeed = speeds.second
+        Log.i("RatsAndCats", "Chasing cat speed: $chasingCatSpeed, Stray cat speed: $strayCatSpeed")
+
         // Инициализация основной кошки
         chasingCat = Cat(speed = chasingCatSpeed, isChasing = true).apply {
             val corner = random.nextInt(4)
@@ -156,6 +168,7 @@ class GameView(context: Context) : View(context) {
         canvas.drawText("Счет: $score", 10f, 30f, paint.apply { color = Color.BLACK; textSize = 30f })
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_MOVE, MotionEvent.ACTION_DOWN -> {
@@ -172,7 +185,7 @@ class GameView(context: Context) : View(context) {
             do {
                 cheese.x = random.nextFloat() * width
                 cheese.y = random.nextFloat() * height
-            } while (Math.abs(cheese.x - mouse.x) < 50 && Math.abs(cheese.y - mouse.y) < 50)
+            } while (abs(cheese.x - mouse.x) < 50 && abs(cheese.y - mouse.y) < 50)
             cheeses.add(cheese)
         }
     }
@@ -180,13 +193,7 @@ class GameView(context: Context) : View(context) {
     private fun spawnStrayCat() {
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastStrayCatSpawnTime > random.nextInt(4000) + 3000 && strayCats.size < 3) {
-            val level = viewModel.selectedLevel.value
-            val strayCatSpeed = when (level?.difficulty) {
-                "Легкий" -> 3
-                "Средний" -> 4
-                "Сложный" -> 5
-                else -> 4 // По умолчанию Средний
-            }
+            // Используем уже вычисленную скорость
             val cat = Cat(speed = strayCatSpeed, isChasing = false)
             cat.x = if (random.nextBoolean()) 0f else width.toFloat()
             cat.y = random.nextFloat() * height

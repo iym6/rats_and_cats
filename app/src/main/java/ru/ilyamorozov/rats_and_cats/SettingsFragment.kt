@@ -1,11 +1,14 @@
 package ru.ilyamorozov.rats_and_cats
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
@@ -15,9 +18,12 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@Suppress("DEPRECATION")
 class SettingsFragment : Fragment() {
     private val viewModel: SharedViewModel by activityViewModels()
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var musicSwitch: Switch
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var soundEffectsSwitch: Switch
     private lateinit var playerNameEditText: EditText
     private lateinit var selectedLevelText: TextView
@@ -44,7 +50,11 @@ class SettingsFragment : Fragment() {
                 selectedLevelText.text = level?.let { "Выбран: ${it.name} (${it.difficulty})" } ?: "Уровень не выбран"
             }
         }
-
+        // Обработка нажатия кнопки "Назад"
+        view.findViewById<Button>(R.id.backButton)?.setOnClickListener {
+            Log.i("RatsAndCats", "Back button clicked in SettingsFragment")
+            (requireActivity() as? MainActivity)?.showMainMenu()
+        }
         return view
     }
 
@@ -55,16 +65,9 @@ class SettingsFragment : Fragment() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
-        // Скрываем меню
-        with(requireActivity()) {
-            findViewById<View>(R.id.titleTextView)?.visibility = View.GONE
-            findViewById<View>(R.id.startButton)?.visibility = View.GONE
-            findViewById<View>(R.id.levelsButton)?.visibility = View.GONE
-            findViewById<View>(R.id.settingsButton)?.visibility = View.GONE
-            findViewById<View>(R.id.leaderboardButton)?.visibility = View.GONE
-        }
     }
 
+    @SuppressLint("UseKtx")
     override fun onPause() {
         super.onPause()
         // Выключаем полноэкранный режим

@@ -21,12 +21,13 @@
         android:id="@+id/loadTop5Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Загрузить топ-5 мировых" />
+        android:text="@string/pull_top5"
+        android:layout_gravity="center"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Мировые рекорды (топ-5)"
+        android:text="@string/top5"
         android:textSize="20sp" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -34,5 +35,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
-
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:text="@string/back"
+        android:theme="@style/BackButton" />
 </LinearLayout>
