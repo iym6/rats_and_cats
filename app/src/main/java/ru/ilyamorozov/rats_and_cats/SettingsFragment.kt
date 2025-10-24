@@ -58,15 +58,6 @@ class SettingsFragment : Fragment() {
         return view
     }
 
-    override fun onResume() {
-        super.onResume()
-        // Включаем полноэкранный режим
-        requireActivity().window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
-    }
-
     @SuppressLint("UseKtx")
     override fun onPause() {
         super.onPause()

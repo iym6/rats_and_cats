@@ -12,7 +12,10 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="32dp">
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:paddingBottom="0dp"
+        android:paddingTop="32dp">
 
         <TextView
             android:id="@+id/titleTextView"
@@ -60,14 +63,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:drawablePadding="8dp"
-            android:text="@string/settings"
+            android:text="@string/records"
             app:rippleColor="@color/accent" />
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/fragmentContainer"
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"
+        android:padding="0dp"
+        android:layout_margin="0dp"
+        android:fitsSystemWindows="false" />
 
 </LinearLayout>

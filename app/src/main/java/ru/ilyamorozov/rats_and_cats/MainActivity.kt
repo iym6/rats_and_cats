@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         Log.i("RatsAndCats", "Showing fragment: ${fragment.javaClass.simpleName}")
         setMenuVisibility(false) // Скрываем меню для всех фрагментов
         supportFragmentManager.commit {
-            replace(R.id.fragmentContainer, fragment)
+            replace(R.id.fragment_container, fragment)
             addToBackStack(null)
         }
     }

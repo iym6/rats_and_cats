@@ -41,8 +41,10 @@ class EndGameDialogFragment : DialogFragment() {
         saveRecordAutomatically()
 
         playAgainButton.setOnClickListener {
+            // Находим текущий GameFragment и вызываем resetGame
+            val gameFragment = parentFragmentManager.findFragmentById(R.id.fragment_container) as? GameFragment
+            gameFragment?.resetGame()
             dismiss()
-            (requireActivity() as? MainActivity)?.showFragment(GameFragment())
         }
 
         exitButton.setOnClickListener {

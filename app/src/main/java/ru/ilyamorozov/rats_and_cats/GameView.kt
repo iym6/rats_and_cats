@@ -28,6 +28,7 @@ import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
+@Suppress("DEPRECATION")
 class GameView(context: Context) : View(context) {
     private val paint = Paint().apply { color = Color.BLUE }
     private val mouse = Mouse(speed = 10)
@@ -35,6 +36,7 @@ class GameView(context: Context) : View(context) {
     private var chasingCat: Cat? = null
     private val strayCats = mutableListOf<Cat>()
     private var score = 0
+    private var scoreScale = 1f
     private var isGameOver = false
     private val random = Random()
     private var lastStrayCatSpawnTime = 0L
@@ -46,19 +48,16 @@ class GameView(context: Context) : View(context) {
     private val viewModel: SharedViewModel by lazy {
         ViewModelProvider(context as FragmentActivity).get(SharedViewModel::class.java)
     }
-
-    // Переменные для хранения скоростей кошек
     private var chasingCatSpeed = 8
-    private  var strayCatSpeed = 4
+    private var strayCatSpeed = 4
 
     init {
         if (context is FragmentActivity) {
             viewModel.loadSavedLevel(context)
-            // Наблюдение за изменением уровня
             context.lifecycleScope.launch {
                 viewModel.selectedLevel.collectLatest { level ->
-                    println("Level changed: $level")
-                    resetGame() // Перезапускаем игру при смене уровня
+                    Log.i("RatsAndCats", "Level changed: $level")
+                    resetGame()
                 }
             }
         }
@@ -67,7 +66,6 @@ class GameView(context: Context) : View(context) {
     }
 
     private fun initAudio() {
-        // Инициализация SoundPool для звуковых эффектов
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_GAME)
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -78,14 +76,13 @@ class GameView(context: Context) : View(context) {
             .build()
         eatCheeseSoundId = soundPool?.load(context, R.raw.eat_cheese, 1) ?: 0
 
-        // Инициализация MediaPlayer для фоновой музыки
         if (isMusicEnabled()) {
             mediaPlayer = MediaPlayer.create(context, R.raw.background_music).apply {
                 isLooping = true
                 try {
                     start()
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    Log.e("RatsAndCats", "Error starting MediaPlayer", e)
                 }
             }
         }
@@ -99,31 +96,28 @@ class GameView(context: Context) : View(context) {
         return prefs.getBoolean("sound_effects_enabled", true)
     }
 
-    private fun resetGame() {
+    fun resetGame() {
         score = 0
+        scoreScale = 1f
         isGameOver = false
         cheeses.clear()
         strayCats.clear()
 
-        // Начальная позиция мыши
         mouse.x = width / 2f
         mouse.y = height / 2f
 
-        // Получаем уровень из ViewModel и вычисляем скорости ОДИН РАЗ
         val level = viewModel.selectedLevel.value
         val speeds = when (level?.difficulty) {
-            "Легкий" -> Pair(5, 8)    // Согласованные значения
-            "Средний" -> Pair(8, 15)   // Согласованные значения
-            "Сложный" -> Pair(15, 25)  // Согласованные значения
-            else -> Pair(8, 15) // По умолчанию Средний
+            "Легкий" -> Pair(5, 8)
+            "Средний" -> Pair(8, 15)
+            "Сложный" -> Pair(15, 25)
+            else -> Pair(8, 15)
         }
 
-        // Сохраняем скорости в переменные класса
         chasingCatSpeed = speeds.first
         strayCatSpeed = speeds.second
         Log.i("RatsAndCats", "Chasing cat speed: $chasingCatSpeed, Stray cat speed: $strayCatSpeed")
 
-        // Инициализация основной кошки
         chasingCat = Cat(speed = chasingCatSpeed, isChasing = true).apply {
             val corner = random.nextInt(4)
             when (corner) {
@@ -134,7 +128,6 @@ class GameView(context: Context) : View(context) {
             }
         }
 
-        // Спавн сыра в начале игры
         spawnCheese()
         updateScoreNotification()
         startGameLoop()
@@ -155,17 +148,39 @@ class GameView(context: Context) : View(context) {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+
+        // Текст счета
+        paint.color = ContextCompat.getColor(context, R.color.cheeseYellow)
+        paint.textSize = 25f * resources.displayMetrics.scaledDensity
+        paint.setShadowLayer(4f, 2f, 2f, Color.BLACK)
+        canvas.save()
+        canvas.scale(scoreScale, scoreScale, 20f, 50f)
+        canvas.drawText("Счет: $score", 30f, 60f, paint)
+        canvas.restore()
+        paint.clearShadowLayer()
+
+        // Отрисовка мыши
         canvas.drawCircle(mouse.x, mouse.y, 20f, paint.apply { color = Color.GRAY })
+
+        // Отрисовка сыра
         cheeses.forEach { cheese ->
-            if (!cheese.isEaten) canvas.drawCircle(cheese.x, cheese.y, 15f, paint.apply { color = Color.YELLOW })
+            if (!cheese.isEaten) {
+                canvas.drawCircle(
+                    cheese.x,
+                    cheese.y,
+                    15f,
+                    paint.apply { color = ContextCompat.getColor(context, R.color.cheeseYellow) }
+                )
+            }
         }
+
+        // Отрисовка кошек
         chasingCat?.let { cat ->
             canvas.drawCircle(cat.x, cat.y, 25f, paint.apply { color = Color.RED })
         }
         strayCats.forEach { cat ->
             canvas.drawCircle(cat.x, cat.y, 25f, paint.apply { color = Color.MAGENTA })
         }
-        canvas.drawText("Счет: $score", 10f, 30f, paint.apply { color = Color.BLACK; textSize = 30f })
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -193,7 +208,6 @@ class GameView(context: Context) : View(context) {
     private fun spawnStrayCat() {
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastStrayCatSpawnTime > random.nextInt(4000) + 3000 && strayCats.size < 3) {
-            // Используем уже вычисленную скорость
             val cat = Cat(speed = strayCatSpeed, isChasing = false)
             cat.x = if (random.nextBoolean()) 0f else width.toFloat()
             cat.y = random.nextFloat() * height
@@ -204,6 +218,8 @@ class GameView(context: Context) : View(context) {
     }
 
     private fun updateGame() {
+        if (isGameOver) return
+
         chasingCat?.moveTowards(mouse.x, mouse.y)
         strayCats.forEach { cat ->
             cat.x += cat.speed * cos(cat.angle)
@@ -220,25 +236,21 @@ class GameView(context: Context) : View(context) {
                     soundPool?.play(eatCheeseSoundId, 1f, 1f, 1, 0, 1f)
                 }
                 animateCheeseDisappear(cheese)
+                animateScore()
                 updateScoreNotification()
                 true
             } else false
         }
-        // Проверка коллизии с преследующей кошкой
         chasingCat?.let { cat ->
             if (isCollision(mouse, cat)) {
                 endGame()
-                return // Выходим, чтобы не проверять другие кошки
+                return
             }
         }
-
-        // Проверка коллизий с бродячими кошками (только если игра не окончена)
-        if (!isGameOver) {
-            strayCats.forEach { cat ->
-                if (isCollision(mouse, cat)) {
-                    endGame()
-                    return // Выходим после первой коллизии
-                }
+        strayCats.forEach { cat ->
+            if (isCollision(mouse, cat)) {
+                endGame()
+                return
             }
         }
     }
@@ -248,13 +260,24 @@ class GameView(context: Context) : View(context) {
         val ay = if (a is Mouse) a.y else if (a is Cheese) a.y else if (a is Cat) a.y else 0f
         val bx = if (b is Mouse) b.x else if (b is Cheese) b.x else if (b is Cat) b.x else 0f
         val by = if (b is Mouse) b.y else if (b is Cheese) b.y else if (b is Cat) b.y else 0f
-        return Math.abs(ax - bx) < 30 && Math.abs(ay - by) < 30
+        return abs(ax - bx) < 30 && abs(ay - by) < 30
     }
 
     private fun animateCheeseDisappear(cheese: Cheese) {
         ValueAnimator.ofFloat(1f, 0f).apply {
             duration = 500
             addUpdateListener { anim ->
+                invalidate()
+            }
+            start()
+        }
+    }
+
+    private fun animateScore() {
+        ValueAnimator.ofFloat(1f, 1.2f, 1f).apply {
+            duration = 300
+            addUpdateListener { anim ->
+                scoreScale = anim.animatedValue as Float
                 invalidate()
             }
             start()
@@ -312,14 +335,17 @@ class GameView(context: Context) : View(context) {
     }
 
     private fun endGame() {
-        if (isGameOver) return // Избегаем множественных вызовов
+        if (isGameOver) return
 
         isGameOver = true
         gameLoop?.cancel()
         stopScoreNotification()
+        cheeses.clear()
+        strayCats.clear()
+        chasingCat = null
 
-        // Показываем диалог
         (context as? MainActivity)?.let { activity ->
+            Log.i("RatsAndCats", "Showing EndGameDialog with score: $score")
             EndGameDialogFragment.newInstance(score).show(activity.supportFragmentManager, "end_game")
         }
     }
