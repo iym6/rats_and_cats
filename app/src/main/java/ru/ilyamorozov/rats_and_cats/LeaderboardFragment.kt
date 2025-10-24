@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.flow.collectLatest
@@ -24,6 +25,7 @@ class LeaderboardFragment : Fragment() {
 
         val localRecyclerView: RecyclerView = view.findViewById(R.id.localRecyclerView)
         localRecyclerView.layoutManager = LinearLayoutManager(context)
+        localRecyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
         val localAdapter = ScoreAdapter()
         localRecyclerView.adapter = localAdapter
 
@@ -35,6 +37,12 @@ class LeaderboardFragment : Fragment() {
 
         val remoteRecyclerView: RecyclerView = view.findViewById(R.id.remoteRecyclerView)
         remoteRecyclerView.layoutManager = LinearLayoutManager(context)
+        localRecyclerView.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                LinearLayoutManager.VERTICAL
+            )
+        )
         val remoteAdapter = RemoteRecordAdapter()
         remoteRecyclerView.adapter = remoteAdapter
 

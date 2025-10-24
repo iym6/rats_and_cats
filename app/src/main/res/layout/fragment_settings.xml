@@ -3,45 +3,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical"
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/selectedLevelText"
+        style="@style/TitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/no_level"
-        android:textSize="16sp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:text="@string/settings"
+        android:textSize="24sp"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/selectedLevelText"
+        style="@style/LeaderboardItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/no_level" />
 
     <Switch
         android:id="@+id/musicSwitch"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/background_music"
         android:layout_marginBottom="16dp"
+        android:text="@string/background_music"
+        android:textColor="@color/textPrimary"
+        android:thumbTint="@color/accent"
+        android:trackTint="@color/primary"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <Switch
         android:id="@+id/soundEffectsSwitch"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/sound_effects"
         android:layout_marginBottom="16dp"
+        android:text="@string/sound_effects"
+        android:textColor="@color/textPrimary"
+        android:thumbTint="@color/accent"
+        android:trackTint="@color/primary"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <EditText
         android:id="@+id/playerNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/primary"
         android:hint="@string/player_name"
-        android:text="@string/player" />
+        android:text="@string/player"
+        android:textColor="@color/textPrimary"
+        android:textColorHint="@color/textSecondary" />
+
     <Button
         android:id="@+id/backButton"
-        android:layout_width="wrap_content"
+        style="@style/BackButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        android:text="@string/back"
-        android:theme="@style/BackButton" />
+        android:text="@string/back" />
 </LinearLayout>

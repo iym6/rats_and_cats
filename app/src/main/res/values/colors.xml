@@ -5,7 +5,7 @@
     <color name="primary">#4CAF50</color> <!-- Зеленый (трава, фон) -->
     <color name="primaryDark">#388E3C</color> <!-- Темно-зеленый -->
     <color name="accent">#FF5722</color> <!-- Оранжевый (кошки, акценты) -->
-    <color name="background">#F5F5F5</color> <!-- Светлый фон -->
+    <color name="background">#FFFFFFFF</color> <!-- Светлый фон -->
     <color name="textPrimary">#212121</color> <!-- Темный текст -->
     <color name="textSecondary">#757575</color> <!-- Серый текст -->
     <color name="cheeseYellow">#FFB300</color> <!-- Желтый для сыра -->

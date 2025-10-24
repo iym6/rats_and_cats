@@ -50,7 +50,7 @@ class EndGameDialogFragment : DialogFragment() {
             (requireActivity() as? MainActivity)?.showMainMenu()
         }
 
-        return AlertDialog.Builder(requireContext())
+        return AlertDialog.Builder(requireContext(), R.style.CustomDialogTheme)
             .setView(view)
             .setCancelable(false) // Нельзя закрыть без выбора
             .create()

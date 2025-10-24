@@ -1,8 +1,11 @@
 package ru.ilyamorozov.rats_and_cats
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
@@ -21,9 +24,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.loadSavedLevel(this)
         setMenuVisibility(true) // Показываем меню при запуске
 
-        setupStartButton()
-        setupNavigationButtons()
-        setupLeaderboardButton()
+        setupButtons()
 
         // Слушатель изменений back stack для управления видимостью меню
         supportFragmentManager.addOnBackStackChangedListener {
@@ -46,25 +47,39 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun setupStartButton() {
-        findViewById<Button>(R.id.startButton).setOnClickListener {
-            showFragment(GameFragment())
-        }
-    }
+    private fun setupButtons() {
+        // Загружаем анимации
+        val scale = AnimationUtils.loadAnimation(this, R.anim.scale_button)
+        val scaleReverse = AnimationUtils.loadAnimation(this, R.anim.scale_button_reverse)
 
-    private fun setupNavigationButtons() {
-        findViewById<Button>(R.id.levelsButton).setOnClickListener {
-            showFragment(LevelsFragment())
+        // Функция для применения анимации к кнопке
+        @SuppressLint("ClickableViewAccessibility")
+        fun View.applyClickAnimation() {
+            setOnTouchListener { v, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> v.startAnimation(scale)
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> v.startAnimation(scaleReverse)
+                }
+                false // Не поглощаем событие, чтобы onClick сработал
+            }
         }
 
-        findViewById<Button>(R.id.settingsButton).setOnClickListener {
-            showFragment(SettingsFragment())
+        // Настройка кнопок
+        findViewById<Button>(R.id.startButton).apply {
+            applyClickAnimation()
+            setOnClickListener { showFragment(GameFragment()) }
         }
-    }
-
-    private fun setupLeaderboardButton() {
-        findViewById<Button>(R.id.leaderboardButton).setOnClickListener {
-            showFragment(LeaderboardFragment())
+        findViewById<Button>(R.id.levelsButton).apply {
+            applyClickAnimation()
+            setOnClickListener { showFragment(LevelsFragment()) }
+        }
+        findViewById<Button>(R.id.settingsButton).apply {
+            applyClickAnimation()
+            setOnClickListener { showFragment(SettingsFragment()) }
+        }
+        findViewById<Button>(R.id.leaderboardButton).apply {
+            applyClickAnimation()
+            setOnClickListener { showFragment(LeaderboardFragment()) }
         }
     }
 

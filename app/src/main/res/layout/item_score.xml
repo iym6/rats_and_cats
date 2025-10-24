@@ -12,19 +12,20 @@
 
         <TextView
             android:id="@+id/playerName"
+            style="@style/TitleText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="16sp"
             android:ellipsize="end"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:gravity="end" />
+            android:gravity="end"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -37,9 +38,9 @@
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
             android:gravity="end"
-            android:textColor="#666666" />
+            android:textColor="#666666"
+            android:textSize="14sp" />
 
     </LinearLayout>
 

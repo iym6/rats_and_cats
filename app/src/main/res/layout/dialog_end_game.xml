@@ -2,54 +2,58 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/dialog_background"
+    android:gravity="center"
     android:orientation="vertical"
-    android:padding="24dp"
-    android:gravity="center">
+    android:padding="24dp">
 
-    <!-- Текст "Вы проиграли :(" -->
+    <ImageView
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/ic_sad_mouse" />
+
     <TextView
         android:id="@+id/titleText"
+        style="@style/TitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:text="Вы проиграли :("
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="#FF5722"
-        android:layout_marginBottom="32dp" />
+        android:textSize="24sp" />
 
-    <!-- Текущий счет -->
     <TextView
         android:id="@+id/scoreText"
+        style="@style/LeaderboardItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_marginBottom="32dp" />
+        android:layout_marginBottom="16dp"
+        android:textSize="18sp" />
 
-    <!-- Кнопки -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/playAgainButton"
+            style="@style/GameButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:text="Играть снова"
-            android:textSize="16sp" />
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_cheese"
+            android:drawablePadding="8dp"
+            android:text="@string/play_again" />
 
         <Button
             android:id="@+id/exitButton"
+            style="@style/BackButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="8dp"
-            android:text="Выйти"
-            android:textSize="16sp" />
+            android:layout_weight="1"
+            android:text="@string/exit" />
 
     </LinearLayout>
-
 </LinearLayout>
