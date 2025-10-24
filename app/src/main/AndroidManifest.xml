@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Rats_and_cats">
+        android:theme="@style/AppTheme">
         <service
             android:name=".GameService"
             android:exported="false" />
