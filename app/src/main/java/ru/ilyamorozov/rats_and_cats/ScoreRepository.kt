@@ -25,14 +25,14 @@ class ScoreRepository(private val dao: ScoreDao) {
     suspend fun getTop5Remote(): List<RemoteRecord> {
         return withContext(Dispatchers.IO) {
             val posts = api.getPosts().take(5)
-            posts.map { post ->
+            posts.mapIndexed { index, post ->
                 val rawDate = "2023-10-${post.id.toString().padStart(2, '0')}"
                 RemoteRecord(
-                    name = "Player ${post.userId}",
+                    name = "Player ${index + 1}",
                     score = post.id * 100,
-                    date = rawDate.formatDate()
+                    date = rawDate.formatDate(),
                 )
-            }
+            }.sortedByDescending { it.score }
         }
     }
 }

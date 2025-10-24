@@ -5,17 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import androidx.fragment.app.activityViewModels
 
 class EndGameDialogFragment : DialogFragment() {
 
-    private val viewModel: LeaderboardViewModel by viewModels()
+    private val viewModel: SharedViewModel by activityViewModels()
+    private val leaderboardViewModel: LeaderboardViewModel by activityViewModels()
     private var score: Int = 0
 
     companion object {
@@ -33,20 +31,43 @@ class EndGameDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view: View = LayoutInflater.from(context).inflate(R.layout.dialog_end_game, null)
-        val nameEditText: EditText = view.findViewById(R.id.nameEditText)
-        val saveButton: Button = view.findViewById(R.id.saveButton)
 
-        saveButton.setOnClickListener {
-            val name = nameEditText.text.toString()
-            val date = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date())
-            val record = ScoreRecord(playerName = name, score = score, date = date)
-            viewModel.insertScore(record)
+        val scoreText: TextView = view.findViewById(R.id.scoreText)
+        val titleText: TextView = view.findViewById(R.id.titleText)
+        val playAgainButton: Button = view.findViewById(R.id.playAgainButton)
+        val exitButton: Button = view.findViewById(R.id.exitButton)
+        scoreText.text = "Счет: $score"
+        // Автоматическое сохранение рекорда
+        saveRecordAutomatically()
+
+        playAgainButton.setOnClickListener {
             dismiss()
+            (requireActivity() as? MainActivity)?.showFragment(GameFragment())
+        }
+
+        exitButton.setOnClickListener {
+            dismiss()
+            (requireActivity() as? MainActivity)?.showMainMenu()
         }
 
         return AlertDialog.Builder(requireContext())
-            .setTitle("Игра окончена! Счет: $score")
             .setView(view)
+            .setCancelable(false) // Нельзя закрыть без выбора
             .create()
+    }
+
+    /** Автоматическое сохранение рекорда по имени из настроек */
+    private fun saveRecordAutomatically() {
+        val prefs = requireActivity().getSharedPreferences("game_prefs", android.content.Context.MODE_PRIVATE)
+        val playerName = prefs.getString("player_name", "Игрок") ?: "Игрок"
+        val date = java.text.SimpleDateFormat("dd.MM.yyyy", java.util.Locale.getDefault()).format(java.util.Date())
+
+        val record = ScoreRecord(
+            playerName = playerName,
+            score = score,
+            date = date
+        )
+
+        leaderboardViewModel.insertScore(record)
     }
 }

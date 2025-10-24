@@ -224,22 +224,21 @@ class GameView(context: Context) : View(context) {
                 true
             } else false
         }
+        // Проверка коллизии с преследующей кошкой
         chasingCat?.let { cat ->
             if (isCollision(mouse, cat)) {
-                isGameOver = true
-                (context as? MainActivity)?.let { activity ->
-                    EndGameDialogFragment.newInstance(score).show(activity.supportFragmentManager, "end_game")
-                }
-                stopScoreNotification()
+                endGame()
+                return // Выходим, чтобы не проверять другие кошки
             }
         }
-        strayCats.forEach { cat ->
-            if (isCollision(mouse, cat)) {
-                isGameOver = true
-                (context as? MainActivity)?.let { activity ->
-                    EndGameDialogFragment.newInstance(score).show(activity.supportFragmentManager, "end_game")
+
+        // Проверка коллизий с бродячими кошками (только если игра не окончена)
+        if (!isGameOver) {
+            strayCats.forEach { cat ->
+                if (isCollision(mouse, cat)) {
+                    endGame()
+                    return // Выходим после первой коллизии
                 }
-                stopScoreNotification()
             }
         }
     }
@@ -310,5 +309,18 @@ class GameView(context: Context) : View(context) {
         soundPool?.release()
         soundPool = null
         stopScoreNotification()
+    }
+
+    private fun endGame() {
+        if (isGameOver) return // Избегаем множественных вызовов
+
+        isGameOver = true
+        gameLoop?.cancel()
+        stopScoreNotification()
+
+        // Показываем диалог
+        (context as? MainActivity)?.let { activity ->
+            EndGameDialogFragment.newInstance(score).show(activity.supportFragmentManager, "end_game")
+        }
     }
 }

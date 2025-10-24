@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Метод для показа фрагмента с управлением видимостью меню
-    private fun showFragment(fragment: Fragment) {
+    fun showFragment(fragment: Fragment) {
         Log.i("RatsAndCats", "Showing fragment: ${fragment.javaClass.simpleName}")
         setMenuVisibility(false) // Скрываем меню для всех фрагментов
         supportFragmentManager.commit {
