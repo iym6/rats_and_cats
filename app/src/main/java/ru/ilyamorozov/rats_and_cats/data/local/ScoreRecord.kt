@@ -1,4 +1,4 @@
-package ru.ilyamorozov.rats_and_cats
+package ru.ilyamorozov.rats_and_cats.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

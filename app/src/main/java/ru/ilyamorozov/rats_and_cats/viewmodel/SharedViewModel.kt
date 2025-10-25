@@ -1,9 +1,10 @@
-package ru.ilyamorozov.rats_and_cats
+package ru.ilyamorozov.rats_and_cats.viewmodel
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import ru.ilyamorozov.rats_and_cats.model.Level
 
 class SharedViewModel : ViewModel() {
     private val _selectedLevel = MutableStateFlow<Level?>(null)

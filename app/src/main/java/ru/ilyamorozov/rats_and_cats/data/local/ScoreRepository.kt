@@ -1,10 +1,13 @@
-package ru.ilyamorozov.rats_and_cats
+package ru.ilyamorozov.rats_and_cats.data.local
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.ilyamorozov.rats_and_cats.data.remote.ApiService
+import ru.ilyamorozov.rats_and_cats.data.remote.RemoteRecord
+import ru.ilyamorozov.rats_and_cats.util.formatDate
 
 class ScoreRepository(private val dao: ScoreDao) {
 
@@ -33,6 +36,18 @@ class ScoreRepository(private val dao: ScoreDao) {
                     date = rawDate.formatDate(),
                 )
             }.sortedByDescending { it.score }
+        }
+    }
+
+    suspend fun getScoreByPlayerName(playerName: String): ScoreRecord? {
+        return withContext(Dispatchers.IO) {
+            dao.getScoreByPlayerName(playerName)
+        }
+    }
+
+    suspend fun updateScore(score: ScoreRecord) {
+        withContext(Dispatchers.IO) {
+            dao.update(score)
         }
     }
 }

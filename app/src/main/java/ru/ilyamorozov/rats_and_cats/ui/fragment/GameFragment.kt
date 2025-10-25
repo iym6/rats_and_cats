@@ -1,10 +1,11 @@
-package ru.ilyamorozov.rats_and_cats
+package ru.ilyamorozov.rats_and_cats.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import ru.ilyamorozov.rats_and_cats.GameView
 
 class GameFragment : Fragment() {
 

@@ -11,6 +11,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import ru.ilyamorozov.rats_and_cats.data.local.AppDatabase
+import ru.ilyamorozov.rats_and_cats.data.local.ScoreDao
+import ru.ilyamorozov.rats_and_cats.data.local.ScoreRecord
 import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)

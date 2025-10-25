@@ -1,4 +1,4 @@
-package ru.ilyamorozov.rats_and_cats
+package ru.ilyamorozov.rats_and_cats.model
 
 class Cheese {
     var x: Float = 0f

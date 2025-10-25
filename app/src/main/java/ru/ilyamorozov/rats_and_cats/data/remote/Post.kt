@@ -1,4 +1,4 @@
-package ru.ilyamorozov.rats_and_cats
+package ru.ilyamorozov.rats_and_cats.data.remote
 
 data class Post(
     val id: Int,

@@ -4,13 +4,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/dialog_background"
-    android:gravity="center">
+    android:gravity="center"
+    android:padding="32dp">
 
     <ImageView
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:src="@drawable/ic_sad_mouse"
-        android:contentDescription="Напоминание о нике" />
+        android:src="@drawable/ic_sad_mouse" />
 
     <TextView
         android:id="@+id/messageText"
@@ -33,10 +33,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:text="В настройки"
-            android:contentDescription="Перейти в настройки"
-            android:drawableStart="@drawable/ic_cheese"
-            android:drawablePadding="8dp" />
+            android:text="@string/settings"
+            android:drawablePadding="4dp" />
 
         <Button
             android:id="@+id/cancelButton"
@@ -45,8 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
-            android:text="Отмена"
-            android:contentDescription="Вернуться в меню" />
+            android:text="@string/back" />
 
     </LinearLayout>
 </LinearLayout>

@@ -1,4 +1,4 @@
-package ru.ilyamorozov.rats_and_cats
+package ru.ilyamorozov.rats_and_cats.model
 
 class Mouse(val name: String = "", val speed: Int = 5) {
     var x: Float = 0f

@@ -11,6 +11,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import ru.ilyamorozov.rats_and_cats.ui.activity.MainActivity
 
 @RunWith(AndroidJUnit4::class)
 class LevelsFragmentTest {

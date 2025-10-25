@@ -1,6 +1,5 @@
-package ru.ilyamorozov.rats_and_cats
+package ru.ilyamorozov.rats_and_cats.ui.adapter
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.core.graphics.toColorInt
+import ru.ilyamorozov.rats_and_cats.R
+import ru.ilyamorozov.rats_and_cats.data.local.ScoreRecord
+import ru.ilyamorozov.rats_and_cats.data.remote.RemoteRecord
 
 class ScoreAdapter : ListAdapter<ScoreRecord, ScoreAdapter.ScoreViewHolder>(ScoreDiffCallback()) {
 
@@ -36,7 +37,6 @@ class ScoreDiffCallback : DiffUtil.ItemCallback<ScoreRecord>() {
     override fun areContentsTheSame(oldItem: ScoreRecord, newItem: ScoreRecord): Boolean = oldItem == newItem
 }
 
-// Аналогично для RemoteRecordAdapter, заменить ScoreRecord на RemoteRecord, поля name/score/date
 class RemoteRecordAdapter : ListAdapter<RemoteRecord, RemoteRecordAdapter.RemoteViewHolder>(RemoteDiffCallback()) {
 
     class RemoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

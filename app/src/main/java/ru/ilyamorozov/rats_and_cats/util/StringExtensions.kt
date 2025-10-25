@@ -1,4 +1,4 @@
-package ru.ilyamorozov.rats_and_cats
+package ru.ilyamorozov.rats_and_cats.util
 
 fun String.formatDate(): String {
     val parts = split("-")

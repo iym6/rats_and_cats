@@ -1,5 +1,6 @@
-package ru.ilyamorozov.rats_and_cats
+package ru.ilyamorozov.rats_and_cats.ui.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,10 +14,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import ru.ilyamorozov.rats_and_cats.ui.adapter.LevelsAdapter
+import ru.ilyamorozov.rats_and_cats.ui.activity.MainActivity
+import ru.ilyamorozov.rats_and_cats.R
+import ru.ilyamorozov.rats_and_cats.model.Level
+import ru.ilyamorozov.rats_and_cats.viewmodel.SharedViewModel
 
 class LevelsFragment : Fragment() {
     private val viewModel: SharedViewModel by activityViewModels()
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -27,9 +34,9 @@ class LevelsFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         val levels = listOf(
-            Level(1, "Уровень 1", "Легкий"),
-            Level(2, "Уровень 2", "Средний"),
-            Level(3, "Уровень 3", "Сложный")
+            Level(1, getString(R.string.level1), getString(R.string.easy)),
+            Level(2, getString(R.string.level2), getString(R.string.medium)),
+            Level(3, getString(R.string.level3), getString(R.string.hard))
         )
 
         val adapter = LevelsAdapter(levels) { level ->

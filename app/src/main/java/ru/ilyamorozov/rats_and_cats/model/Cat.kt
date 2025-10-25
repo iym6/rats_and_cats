@@ -1,7 +1,8 @@
-package ru.ilyamorozov.rats_and_cats
+package ru.ilyamorozov.rats_and_cats.model
 
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.math.sqrt
 
 class Cat(val speed: Int = 3, val isChasing: Boolean = true) {
     var x: Float = 0f
@@ -12,7 +13,7 @@ class Cat(val speed: Int = 3, val isChasing: Boolean = true) {
         if (isChasing) {
             val dx = mouseX - x
             val dy = mouseY - y
-            val dist = Math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
+            val dist = sqrt((dx * dx + dy * dy).toDouble()).toFloat()
             if (dist > 0) {
                 x += (dx / dist) * speed
                 y += (dy / dist) * speed

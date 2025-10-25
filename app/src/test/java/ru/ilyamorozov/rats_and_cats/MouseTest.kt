@@ -2,6 +2,7 @@ package ru.ilyamorozov.rats_and_cats
 
 import org.junit.Test
 import org.junit.Assert.*
+import ru.ilyamorozov.rats_and_cats.model.Mouse
 
 class MouseTest {
 

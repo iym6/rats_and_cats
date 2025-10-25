@@ -5,12 +5,17 @@ import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import ru.ilyamorozov.rats_and_cats.data.local.ScoreDao
+import ru.ilyamorozov.rats_and_cats.data.local.ScoreRepository
+import ru.ilyamorozov.rats_and_cats.data.remote.ApiService
+import ru.ilyamorozov.rats_and_cats.data.remote.Post
 
 class ScoreRepositoryTest {
 
     private val mockDao: ScoreDao = mockk()
     private val mockApi: ApiService = mockk()
-    private val repository = ScoreRepository(mockDao) // Нужно переопределить api для мока, но для простоты используем mock
+    private val repository =
+        ScoreRepository(mockDao) // Нужно переопределить api для мока, но для простоты используем mock
 
     @Test
     fun testGetTop5Remote() = runBlocking {

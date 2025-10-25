@@ -1,4 +1,4 @@
-package ru.ilyamorozov.rats_and_cats
+package ru.ilyamorozov.rats_and_cats.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -7,6 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import ru.ilyamorozov.rats_and_cats.data.local.AppDatabase
+import ru.ilyamorozov.rats_and_cats.data.local.ScoreRecord
+import ru.ilyamorozov.rats_and_cats.data.local.ScoreRepository
+import ru.ilyamorozov.rats_and_cats.data.remote.RemoteRecord
 
 class LeaderboardViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -36,6 +40,21 @@ class LeaderboardViewModel(application: Application) : AndroidViewModel(applicat
     fun insertScore(score: ScoreRecord) {
         viewModelScope.launch {
             repository.insert(score)
+        }
+    }
+
+    fun saveOrUpdateScore(score: ScoreRecord) {
+        viewModelScope.launch {
+            val existingScore = repository.getScoreByPlayerName(score.playerName)
+            if (existingScore != null) {
+                if (score.score > existingScore.score) {
+                    // Обновляем существующий рекорд
+                    repository.updateScore(score.copy(id = existingScore.id))
+                }
+            } else {
+                // Сохраняем новый рекорд
+                repository.insert(score)
+            }
         }
     }
 }

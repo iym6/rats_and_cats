@@ -4,6 +4,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import ru.ilyamorozov.rats_and_cats.model.Level
+import ru.ilyamorozov.rats_and_cats.viewmodel.SharedViewModel
 
 class SharedViewModelTest {
     @Test

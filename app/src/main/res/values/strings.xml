@@ -16,4 +16,15 @@
     <string name="choose_level">Выберите уровень</string>
     <string name="play_again">Играть снова</string>
     <string name="exit">Выйти</string>
+    <string name="score">Счёт</string>
+    <string name="you_lose">Вы проиграли :(</string>
+    <string name="enter_nickname">Пожалуйста, введите ник в настройках!</string>
+    <string name="easy">Легкий</string>
+    <string name="medium">Средний</string>
+    <string name="hard">Сложный</string>
+    <string name="level1">Уровень 1</string>
+    <string name="level2">Уровень 2</string>
+    <string name="level3">Уровень 3</string>
+    <string name="not_empty_nickname">Ник не может быть пустым!</string>
+    <string name="chosen">Выбран</string>
 </resources>

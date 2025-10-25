@@ -1,9 +1,11 @@
-package ru.ilyamorozov.rats_and_cats
+package ru.ilyamorozov.rats_and_cats.data.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import ru.ilyamorozov.rats_and_cats.data.local.ScoreDao
+import ru.ilyamorozov.rats_and_cats.data.local.ScoreRecord
 
 @Database(entities = [ScoreRecord::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {

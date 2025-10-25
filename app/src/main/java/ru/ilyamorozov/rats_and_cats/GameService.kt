@@ -10,6 +10,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import ru.ilyamorozov.rats_and_cats.ui.activity.MainActivity
 
 class GameService : Service() {
     companion object {
@@ -45,8 +46,8 @@ class GameService : Service() {
         )
 
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Rats and Cats")
-            .setContentText("Счет: $score")
+            .setContentTitle(getString(R.string.app_name))
+            .setContentText(getString(R.string.score) + ": $score")
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

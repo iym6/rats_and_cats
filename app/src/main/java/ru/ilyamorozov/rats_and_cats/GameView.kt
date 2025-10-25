@@ -23,6 +23,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import ru.ilyamorozov.rats_and_cats.model.Cat
+import ru.ilyamorozov.rats_and_cats.model.Cheese
+import ru.ilyamorozov.rats_and_cats.model.Mouse
+import ru.ilyamorozov.rats_and_cats.ui.activity.MainActivity
+import ru.ilyamorozov.rats_and_cats.ui.fragment.EndGameDialogFragment
+import ru.ilyamorozov.rats_and_cats.viewmodel.SharedViewModel
 import java.util.Random
 import kotlin.math.abs
 import kotlin.math.cos
@@ -108,9 +114,9 @@ class GameView(context: Context) : View(context) {
 
         val level = viewModel.selectedLevel.value
         val speeds = when (level?.difficulty) {
-            "Легкий" -> Pair(5, 8)
-            "Средний" -> Pair(8, 15)
-            "Сложный" -> Pair(15, 25)
+            context.getString(R.string.easy) -> Pair(5, 8)
+            context.getString(R.string.medium) -> Pair(8, 15)
+            context.getString(R.string.hard) -> Pair(15, 25)
             else -> Pair(8, 15)
         }
 

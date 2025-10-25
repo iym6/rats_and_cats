@@ -1,4 +1,4 @@
-package ru.ilyamorozov.rats_and_cats
+package ru.ilyamorozov.rats_and_cats.ui.activity
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -12,6 +12,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import ru.ilyamorozov.rats_and_cats.R
+import ru.ilyamorozov.rats_and_cats.ui.fragment.EmptyNicknameDialogFragment
+import ru.ilyamorozov.rats_and_cats.ui.fragment.GameFragment
+import ru.ilyamorozov.rats_and_cats.ui.fragment.LeaderboardFragment
+import ru.ilyamorozov.rats_and_cats.ui.fragment.LevelsFragment
+import ru.ilyamorozov.rats_and_cats.ui.fragment.SettingsFragment
+import ru.ilyamorozov.rats_and_cats.viewmodel.SharedViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -86,7 +93,19 @@ class MainActivity : AppCompatActivity() {
     // Метод для показа фрагмента с управлением видимостью меню
     fun showFragment(fragment: Fragment) {
         Log.i("RatsAndCats", "Showing fragment: ${fragment.javaClass.simpleName}")
-        setMenuVisibility(false) // Скрываем меню для всех фрагментов
+
+        // Проверяем ник только для GameFragment
+        if (fragment is GameFragment) {
+            val prefs = getSharedPreferences("game_prefs", MODE_PRIVATE)
+            val playerName = prefs.getString("player_name", "")?.trim()
+            if (playerName.isNullOrEmpty()) {
+                Log.i("RatsAndCats", "Empty nickname detected, showing EmptyNicknameDialogFragment")
+                EmptyNicknameDialogFragment().show(supportFragmentManager, "empty_nickname")
+                return
+            }
+        }
+
+        setMenuVisibility(false)
         supportFragmentManager.commit {
             replace(R.id.fragment_container, fragment)
             addToBackStack(null)
